@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: tracker
+      POSTGRES_PASSWORD: tracker
+      POSTGRES_DB: tracker
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tracker -d tracker"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+
+  migrations:
+    image: ghcr.io/kukymbr/goose-docker:3.28.0
+    profiles: ["tools"]
+    environment:
+      GOOSE_DRIVER: postgres
+      GOOSE_DBSTRING: "postgres://tracker:tracker@postgres:5432/tracker?sslmode=disable"
+    volumes:
+      - ./migrations:/migrations:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

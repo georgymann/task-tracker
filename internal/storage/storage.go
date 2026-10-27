@@ -9,7 +9,6 @@ import (
 type Storage interface {
 	CreateTask(ctx context.Context, task dto.Task) (dto.Task, error)
 	GetTask(ctx context.Context, id int) (dto.Task, error)
-	GetTasks(ctx context.Context) ([]dto.Task, error)
 	UpdateTask(ctx context.Context, task dto.Task) error
 	DeleteTask(ctx context.Context, id int) error
 }

@@ -5,7 +5,9 @@ import (
 	"log"
 	"os"
 	"time"
+
 	"task-tracker/internal/app"
+	"task-tracker/internal/storage"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -31,4 +33,9 @@ func main() {
 	if err := pool.Ping(ctx); err != nil {
 		log.Fatal(err)
 	}
+
+	log.Println("подключение к PostgreSQL работает")
+
+	store := storage.NewPostgresStorage(pool)
+	_ = store
 }

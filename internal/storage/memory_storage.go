@@ -3,7 +3,6 @@ package storage
 import (
 	"context"
 	"fmt"
-	"sort"
 	"time"
 
 	"task-tracker/internal/dto"
@@ -44,23 +43,6 @@ func (s *MemoryStorage) GetTask(ctx context.Context, id int) (dto.Task, error) {
 		return dto.Task{}, fmt.Errorf("задача с ID %d не найдена", id)
 	}
 	return task, nil
-}
-
-func (s *MemoryStorage) GetTasks(ctx context.Context) ([]dto.Task, error) {
-	if err := ctx.Err(); err != nil {
-		return nil, err
-	}
-
-	tasks := make([]dto.Task, 0, len(s.tasks))
-	for _, task := range s.tasks {
-		tasks = append(tasks, task)
-	}
-
-	sort.Slice(tasks, func(i, j int) bool {
-		return tasks[i].ID < tasks[j].ID
-	})
-
-	return tasks, nil
 }
 
 func (s *MemoryStorage) UpdateTask(ctx context.Context, task dto.Task) error {
